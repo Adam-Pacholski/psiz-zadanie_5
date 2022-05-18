@@ -11,7 +11,18 @@ struct BMP_header
     unsigned int size;
     int garbage; // nie koniecznie musi byc
     unsigned int offset;
-}header_bmp;
+}File;
+
+struct DIB_header {
+    unsigned int header_size;
+    unsigned int width;
+    unsigned int height;
+    unsigned short int colorPlanes;
+    unsigned short int bitsPerPixel;
+    unsigned int compression;
+    unsigned int imageSize;
+
+}Dib;
 
 void openFile() {
 
@@ -25,13 +36,24 @@ void openFile() {
     else {
         cout << "udalo sie otworzyc plik\n";
 
-        cout << sizeof(BMP_header) << "\n";
+       
 
-        fread(header_bmp.name, 2, 1, fp);
-        fread(&header_bmp.size, 3 * sizeof(int), 1, fp);
-        //fread(&header, sizeof(struct BMP_header), 1, fp);
-        cout << "Pierwsze dwa znaki :" << header_bmp.name[0] << header_bmp.name[1]<<"\n";
-        cout << "Rozmiar pkiku: " << header_bmp.size << "\n";
+        fread(File.name, 2, 1, fp);
+        fread(&File.size, 3 * sizeof(int), 1, fp);
+        fread(&File.garbage, 4, 1, fp);
+        fread(&File.offset, 4, 1, fp);
+        fread(&Dib,sizeof(struct DIB_header), 1, fp);
+
+        
+        cout << "Pierwsze dwa znaki :" << File.name[0] << File.name[1]<<"\n";
+        cout << "Rozmiar pkiku: " << File.size << "\n";
+        cout << "Rozmiar carbage: " << File.garbage << "\n";
+        cout << "Rozmiar offsets: " << File.offset << "\n";
+
+        cout << "Rozmiar dip heder: " << Dib.header_size << "\n";
+        cout << "Rozmiar BMP:  " << Dib.width << " x " << Dib.height << "\n";
+  
+        cout << "Color planes: " << Dib.colorPlanes << "\n";
 
          fclose(fp);
     }
