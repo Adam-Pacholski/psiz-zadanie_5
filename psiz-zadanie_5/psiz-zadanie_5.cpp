@@ -38,9 +38,9 @@ void info(const char *plik) {
         cout << "Nie mozna bylo otworzyc pliku";
     }
     else {
-        cout << "Plik otwarty\n\n";
+        cout << "Udało sie otworzyc plik\n" << plik << "\n";
 
-        cout << "INFORMACJE O PLIKU: " << plik << "\n\n";
+        cout << "INFORMACJE O PLIKU" << "\n\n";
 
         // Header BMP
 
@@ -82,10 +82,11 @@ void negatyw(const char* plik) {
 
     FILE* np = fopen("negatyw.bmp", "wb");
     if (np == nullptr) {
-        cout << "\n\nNie mozna bylo otworzyc pliku";
+        cout << "\nNie mozna bylo otworzyc pliku";
     }
     else {
-        cout << "\n\nPlik otwarty\n\n";
+        cout << "\nUdalo sie otworzyc plik: negatyw.bmp\n";
+        
         cout << "TWORZE NEGATYW ...\n";
         fwrite(&header_bmp.name[0], 1, 1, np);
         fwrite(&header_bmp.name[1], 1, 1, np);
