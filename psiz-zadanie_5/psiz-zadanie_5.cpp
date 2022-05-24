@@ -33,8 +33,6 @@ struct DIB_header{
 
 void info(const char *plik) {
 
-   
-     
     FILE* fp = fopen(plik, "rb");
 
     if (fp == nullptr) {
