@@ -2,6 +2,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include <iostream>
+#include <limits>
 
 using namespace std;
 
@@ -9,7 +10,8 @@ struct BMP_header
 {
     char name[2];
     unsigned int size;
-    int garbage; // nie koniecznie musi byc
+    unsigned short int reserved_1;
+    unsigned short int reserved_2;
     unsigned int offset;
 }header_bmp;
 
@@ -29,35 +31,39 @@ struct DIB_header{
 }header_dib;
 
 
-void openFile() {
+void info(const char *plik) {
 
-
-    FILE* fp = fopen("test.bmp", "rb");
+   
+     
+    FILE* fp = fopen(plik, "rb");
 
     if (fp == nullptr) {
-        cout << "cos poszlo nie tak";
-        
+        cout << "Nie mozna bylo otworzyc pliku";
     }
     else {
-       // cout << "udalo sie otworzyc plik\n";
+        cout << "Plik otwarty\n\n";
 
-       // cout << sizeof(BMP_header) << "\n";
+        cout << "INFORMACJE O PLIKU: " << plik << "\n\n";
 
-        fread(header_bmp.name, 2, 1, fp);
+        // Header BMP
+
+        fread(&header_bmp.name, 2, 1, fp);
         fread(&header_bmp.size, sizeof(header_bmp.size), 1, fp);
-        fread(&header_bmp.garbage, sizeof(header_bmp.garbage), 1, fp);
+        fread(&header_bmp.reserved_1, sizeof(header_bmp.reserved_1), 1, fp);
+        fread(&header_bmp.reserved_2, sizeof(header_bmp.reserved_2), 1, fp);
         fread(&header_bmp.offset, sizeof(header_bmp.offset), 1, fp);
 
-        
+        cout << "Pierwsze dwa znaki :" << (char)header_bmp.name[0] << header_bmp.name[1] << "\n";
+        cout << "Rozmiar pkiku: " << header_bmp.size << " bajtow\n";
+        cout << "Zarezerwowane 1: " << header_bmp.reserved_1 << "\n";
+        cout << "Zarezerwowane 2: " << header_bmp.reserved_1 << "\n";
+        cout << "Offset (poczatkowy adres bitow w tablicy pikseli): " << header_bmp.offset << "\n"; 
+
+        // Header DIB
+
         fread(&header_dib, sizeof(struct DIB_header), 1, fp);
 
-
-       /* cout << "Pierwsze dwa znaki :" << header_bmp.name[0] << header_bmp.name[1] << "\n";
-        cout << "Rozmiar pkiku: " << header_bmp.size << " bajtow\n";
-        cout << "Garbage: " << header_bmp.garbage << "\n";
-        cout << "Offset: " << header_bmp.offset << "\n"; */
-
-        cout << "Wielkosc nagłowka informacyjnego: " << header_dib.headerSize << "\n";
+        cout << "Wielkosc naglowka informacyjnego: " << header_dib.headerSize << "\n";
         cout << "Szerokosc obrazu: " << header_dib.width << " pikseli\n";
         cout << "Wysokosc obrazu: " << header_dib.height << " pikseli\n";
         cout << "Liczba warstw kolorow: " << header_dib.planes << "\n";
@@ -71,13 +77,21 @@ void openFile() {
 
          fclose(fp);
     }
-  
 }
 
-int main()
+
+int main(int argc, char* argv[])
 {
+    const char* plik;
     
-    openFile();
+    if (argv[1] == nullptr) {
+        plik = "test.bmp";
+    } else {
+        plik = argv[1];
+    }
+    info(plik);
+    
+    
 
     return 0;
 }
